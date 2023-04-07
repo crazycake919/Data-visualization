@@ -180,7 +180,9 @@ function drawEverything() {
 
     stroke(0);
     strokeWeight(1);
-    
+     for (let i = 0; i < number; i++) {
+        drawSquare(xSize * i + xOffSet, ySize, valueIncrease * arr[i]);
+    }
 
     //text
     textSize(18);
@@ -195,9 +197,7 @@ function drawEverything() {
             pop();
         }
     }
-    for (let i = 0; i < number; i++) {
-        drawSquare(xSize * i + xOffSet, ySize, valueIncrease * arr[i]);
-    }
+   
 }
 
 function lines() {
