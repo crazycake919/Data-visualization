@@ -1,6 +1,6 @@
 const frmRate = 30;
 
-let xScale = 1100;
+let xScale = 1160;
 let yScale = 600;
 let number = 100;
 
