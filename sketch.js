@@ -1,14 +1,15 @@
 const frmRate = 30;
 
-let xScale = 1160;
+let xScale = 1160; //1160
 let yScale = 600;
-let number = 100;
+let number = 200;
 
 let numberScale = number / 10;
-let xSize = xScale / number;
+let xSize =xScale / number;
 let ySize = yScale + 60;
 let xOffSet = 60;
-let valueIncrease = yScale / number;
+let yOffSet = 50;
+let valueIncrease = Math.round(yScale / number);
 let arr = Array.from(Array(number), (_, i) => i + 1);
 
 // colors
@@ -22,7 +23,7 @@ let endTime = 0;
 let started = false;
 function initializeScene(n) {
     numberScale = n / 10;
-    xSize = xScale / n;
+    xSize =  xScale / n;
     ySize = yScale + 60;
     xOffSet = 60;
     valueIncrease = yScale / n;
@@ -38,7 +39,7 @@ function setup() {
     cnv = createCanvas(1280, 720);
     cnv.mouseClicked(start);
     frameRate(frmRate);
-    
+
     setRandom();
     c1 = color("#0EDAF1"); // start
     c2 = color("#2418E7"); // end
@@ -53,9 +54,9 @@ function draw() {
 
 function start() {
 
-    
+
     if (!started) {
-    
+
         if (!isNaN($("#numbers").val()) && $("#numbers").val() == "") {
             return;
         }
@@ -99,7 +100,18 @@ async function asyncQS(begin, end) {
 
     if (begin == 0 && end == number - 1)
         startTime = performance.now();
-    if (begin >= end) return;
+    if (begin >= end) {
+        if (begin == 0 && end == number - 1) {
+
+            endTime = performance.now();
+            let elapsed = endTime - startTime;
+            console.log(elapsed);
+            started = false;
+            beep.pause();
+        }
+        return;
+
+    }
     var mid;
     var w = arr[begin];
     var i = begin, j = end + 1;
@@ -169,25 +181,25 @@ function sleep(millisecondsDuration) {
         setTimeout(resolve, millisecondsDuration);
     })
 }
-function drawNothing() {
-    background(100);
-}
+
 function drawEverything() {
-    
+
     background(0);
     lines();
     //rects
 
     stroke(0);
-    strokeWeight(1);
-     for (let i = 0; i < number; i++) {
-        drawSquare(xSize * i + xOffSet, ySize, valueIncrease * arr[i]);
-    }
+    strokeWeight(2);
 
+    for (let i = 0; i < number; i++) {
+        drawSquare(xSize * i + xOffSet, ySize, arr[i]);
+    }
     //text
-    textSize(18);
+    stroke(255);
+    textSize(15);
+    strokeWeight(0.9);
     textAlign(RIGHT);
-    
+
     for (let i = 0; i <= number; i++) {
         if (i % numberScale == 0) {
             push();
@@ -197,7 +209,7 @@ function drawEverything() {
             pop();
         }
     }
-   
+
 }
 
 function lines() {
@@ -206,7 +218,7 @@ function lines() {
     strokeWeight(1);
     for (let i = 1; i <= number; i++) {
         if (i % numberScale == 0) {
-            line(60, yScale + 60 - valueIncrease * i, 60 + xScale, yScale + 60 - valueIncrease * i);
+            line(xOffSet, yScale + 60 - valueIncrease * i, xOffSet + xScale, yScale + 60 - valueIncrease * i);
         }
     }
     stroke(255);
@@ -214,18 +226,30 @@ function lines() {
     //x
     line(xOffSet - 1, ySize + 2, xOffSet + xScale + 5, ySize + 2);
     //y
-    line(xOffSet - 3, 55, xOffSet - 3, ySize + 2);
+    line(xOffSet - 3, yOffSet, xOffSet - 3, ySize + 2);
 }
 
 function drawSquare(x, y, value) {
     noFill();
+    
+    
+    
     for (let i = x; i < x + xSize; i++) {
-        let inter = map(value / valueIncrease, 1, number, 0, 1);
-        let neki = map(i, x, xSize, 0, 1 / number);
-        inter += neki;
-        let c = lerpColor(c1, c2, inter);
-        stroke(c);
-        line(i, y, i, y - value);
+        
+            let inter = map(value, 1, number, 0, 1);
+            let smthing = 1.0/((number-1)*2)
+            
+            let neki = map(i, x, x + xSize, -smthing, smthing);
+            inter += neki;
+    
+            inter = map(inter, 0.0 - smthing, 1.0 + smthing, 0, 1);
+    
+            let c = lerpColor(c1, c2, inter);
+            stroke(c);
+            
+            line(i, y, i, y - value * valueIncrease);
+
+        
     }
 }
 
