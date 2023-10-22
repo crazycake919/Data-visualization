@@ -7,11 +7,3 @@ body {
 canvas {
     display: block;
 }
-input{
-    margin: 5px;
-}
-button{
-    margin:2px;
-    padding: 5px;
-    ;
-}
